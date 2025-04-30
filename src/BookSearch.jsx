@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import './BookSearch.css';
 
 const BookSearch = () => {
@@ -9,7 +9,8 @@ const BookSearch = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchBooks = async () => {
+  // ✅ Memoize fetchBooks so it doesn't cause ESLint warnings
+  const fetchBooks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -17,24 +18,25 @@ const BookSearch = () => {
       if (!res.ok) throw new Error("Failed to fetch books");
       const data = await res.json();
       setBooks(data.docs);
-      setTotalPages(Math.ceil(data.num_found / 100)); 
+      setTotalPages(Math.ceil(data.num_found / 100));
     } catch (err) {
       setError("Error fetching books. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [query, page]);
 
+  // ✅ Add fetchBooks to the dependency array
   useEffect(() => {
     if (query) {
       fetchBooks();
     }
-  }, [query, page]);
+  }, [fetchBooks]);
 
   return (
     <div className="book-search-container">
       <h1>Book Search</h1>
-      
+
       <input
         type="text"
         className="search-bar"
@@ -43,9 +45,9 @@ const BookSearch = () => {
         onChange={(e) => setQuery(e.target.value)}
       />
 
-      {loading && <div className="loader"></div>}  {}
+      {loading && <div className="loader"></div>}
       {error && <p className="error">{error}</p>}
-      
+
       <div className="book-list">
         {books.length > 0 ? (
           books.map((book) => (
