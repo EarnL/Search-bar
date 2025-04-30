@@ -31,7 +31,8 @@ const BookSearch = () => {
     if (query) {
       fetchBooks();
     }
-  }, [fetchBooks]);
+  }, [query, page]);
+  
 
   return (
     <div className="book-search-container">
