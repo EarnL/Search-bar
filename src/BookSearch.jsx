@@ -31,7 +31,7 @@ const BookSearch = () => {
     if (query) {
       fetchBooks();
     }
-  }, [query, page]);
+  }, [query, page, fetchBooks]);
   
 
   return (
