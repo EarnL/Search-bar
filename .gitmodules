@@ -1,0 +1,3 @@
+[submodule "Search-bar"]
+	path = Search-bar
+	url = https://github.com/yourusername/Search-bar.git
